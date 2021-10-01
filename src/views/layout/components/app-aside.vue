@@ -42,7 +42,7 @@
           <i class="el-icon-setting"></i>
           <span>广告管理</span>
         </template>
-        <el-menu-item index='advert'>
+        <el-menu-item index='/advert'>
           <i class="el-icon-document"></i>
           <span>广告列表</span>
         </el-menu-item>

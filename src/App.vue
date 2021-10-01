@@ -5,5 +5,20 @@
   </div>
 </template>
 
+<script>
+import request from '@/utils/request.js'
+
+request({
+  method: 'GET',
+  url: '/front/ad/getAdList'
+}).then(res => {
+  console.log(res);
+})
+
+export default {
+
+}
+</script>
+
 <style lang="scss">
 </style>
