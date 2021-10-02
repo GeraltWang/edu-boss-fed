@@ -1,31 +1,78 @@
 <template>
   <div class="login">
-    <el-form ref="form" :model="form" label-width="80px" label-position="top">
-      <el-form-item label="账号">
-        <el-input v-model="form.userName"></el-input>
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px" label-position="top">
+      <el-form-item label="手机号" prop="phone">
+        <el-input v-model="form.phone"></el-input>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="form.passWord" type="password"></el-input>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="form.password" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">登录</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="isLogin">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
+import request from '@/utils/request'
+import qs from 'qs'
+
 export default {
   name: 'LoginIndex',
   data () {
     return {
+      // 表单数据对象
       form: {
-        userName: '',
-        passWord: ''
-      }
+        phone: '',
+        password: ''
+      },
+      // 表单校验规则
+      rules: {
+        phone: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { pattern: /^1\d{10}$/, message: '请输入正确的手机号', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 18, message: '密码长度为6 - 18位', trigger: 'blur' }
+        ]
+      },
+      // 点击登录后按钮变为加载状态true，默认为false
+      isLogin: false
     };
   },
   methods: {
-    onSubmit () {}
+    async onSubmit () {
+      try {
+        // 表单校验
+        await this.$refs.form.validate()
+        // 发送请求,解构方式接受返回数据中的data
+        this.isLogin = true
+        const { data } = await request({
+          method: 'POST',
+          url: '/front/user/login',
+          // urlencoded 格式：名=值&名=值
+          data: qs.stringify(this.form)
+        })
+        this.isLogin = false
+        // 响应数据处理
+        if (data.state === 1) {
+          this.$router.push({ name: 'home' })
+          this.$notify.success({
+            title: '登录成功',
+            message: `${data.message}`
+          });
+        } else {
+          this.$notify.error({
+            title: '登录失败',
+            message: `${data.message}`
+          });
+        }
+        console.log(data);
+      } catch (error) {
+        console.log('未通过');
+      }
+    }
   }
 };
 </script>
