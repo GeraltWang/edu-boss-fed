@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store/index.js'
 
 Vue.use(VueRouter)
 
@@ -113,6 +114,30 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // 验证 to 路由是否需要鉴权
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // 验证Vuex 的store中登录用户信息是否存在
+    if (!store.state.user) {
+      // 未登录，跳转到登录页
+      next({
+        name: 'login',
+        query: {
+          // 将路由的fullpath传递给login页面
+          redirect: to.fullPath
+        }
+      })
+    } else {
+      console.log('登录成功');
+      next()
+    }
+    console.log('当前页面需要认证');
+  } else {
+    console.log('无需认证');
+    next()
+  }
 })
 
 export default router

@@ -14,8 +14,7 @@
   </div>
 </template>
 <script>
-import request from '@/utils/request'
-import qs from 'qs'
+import { login } from '@/services/user'
 
 export default {
   name: 'LoginIndex',
@@ -44,28 +43,28 @@ export default {
   methods: {
     async onSubmit () {
       try {
-        // 表单校验
+        // 1.表单校验
         await this.$refs.form.validate()
-        // 发送请求,解构方式接受返回数据中的data
+        // 2.发送请求,解构方式接受返回数据中的data
         this.isLogin = true
-        const { data } = await request({
-          method: 'POST',
-          url: '/front/user/login',
-          // urlencoded 格式：名=值&名=值
-          data: qs.stringify(this.form)
-        })
+        // 登录请求已封装至services/user中
+        const { data } = await login(this.form)
         this.isLogin = false
-        // 响应数据处理
+        // 3.响应数据处理
         if (data.state === 1) {
-          this.$router.push({ name: 'home' })
           this.$notify.success({
             title: '登录成功',
-            message: `${data.message}`
+            message: `${data.message}`,
+            offset: 60
           });
+          // 将用户信息存储到store.state.user 中
+          this.$store.commit('setUser', data.content)
+          this.$router.push(this.$route.query.redirect || '/')
         } else {
           this.$notify.error({
             title: '登录失败',
-            message: `${data.message}`
+            message: `${data.message}`,
+            offset: 60
           });
         }
         console.log(data);

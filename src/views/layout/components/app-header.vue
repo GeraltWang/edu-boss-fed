@@ -11,25 +11,39 @@
     <el-dropdown>
       <span class="el-dropdown-link">
           <!-- 用户头像 -->
-        <el-avatar size="medium" :src="circleUrl"></el-avatar>
+        <el-avatar size="medium" :src="userInfo.portrait || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'"></el-avatar>
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>用户名</el-dropdown-item>
+        <el-dropdown-item>
+          {{ userInfo.userName }}
+        </el-dropdown-item>
         <el-dropdown-item divided>登出</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>
 </template>
 <script>
+// 引入获取用户信息接口
+import { getUserInfo } from '@/services/user'
+
 export default {
   name: 'AppHeader',
+  created () {
+    // 加载用户信息
+    // 生命周期钩子中不建议直接书写逻辑代码，不利于后期维护
+    this.loadUserInfo()
+  },
   data () {
     return {
-      circleUrl:
-        'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-      squareUrl:
-        'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png'
+      // 用户信息
+      userInfo: {}
     };
+  },
+  methods: {
+    async loadUserInfo () {
+      const { data } = await getUserInfo()
+      this.userInfo = data.content
+    }
   }
 };
 </script>
