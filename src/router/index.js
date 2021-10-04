@@ -20,7 +20,7 @@ const routes = [
     path: '/',
     component: () => import(/* webpackChunkName: 'layout' */'@/views/layout/index'),
     // 直接给某个路由设置，这时内部的子路由都需要认证（包含当前路由）
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, breadcrumb: '主页' },
     children: [
       {
         path: '',
@@ -30,42 +30,66 @@ const routes = [
       {
         path: '/role',
         name: 'role',
+        meta: {
+          breadcrumb: '角色管理'
+        },
         component: () => import(/* webpackChunkName: 'role' */'@/views/role/index')
       },
       {
         path: '/menu',
         name: 'menu',
+        meta: {
+          breadcrumb: '菜单列表'
+        },
         component: () => import(/* webpackChunkName: 'menu' */'@/views/menu/index')
       },
       {
         path: '/resource',
         name: 'resource',
+        meta: {
+          breadcrumb: '资源列表'
+        },
         component: () => import(/* webpackChunkName: 'resource' */'@/views/resource/index')
       },
       {
         path: '/course',
         name: 'course',
+        meta: {
+          breadcrumb: '课程管理'
+        },
         component: () => import(/* webpackChunkName: 'course' */'@/views/course/index')
       },
       {
         path: '/user',
         name: 'user',
+        meta: {
+          breadcrumb: '用户管理'
+        },
         component: () => import(/* webpackChunkName: 'user' */'@/views/user/index')
       },
       {
         path: '/advert',
         name: 'advert',
+        meta: {
+          breadcrumb: '广告列表'
+        },
         component: () => import(/* webpackChunkName: 'advert' */'@/views/advert/index')
       },
       {
         path: '/advert-space',
         name: 'advert-space',
+        meta: {
+          breadcrumb: '广告位列表'
+        },
         component: () => import(/* webpackChunkName: 'advert-space' */'@/views/advert-space/index')
       },
       // 添加菜单路由组件
       {
         path: '/menu/create',
         name: 'menu-create',
+        meta: {
+          breadcrumb: '添加菜单'
+        },
         component: () => import(/* webpackChunkName: 'menu-create' */'@/views/menu/create')
       },
       // 编辑菜单路由组件
@@ -139,5 +163,10 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
+// const originalPush = VueRouter.prototype.push
+// VueRouter.prototype.push = function push (location) {
+//   return originalPush.call(this, location).catch(err => err)
+// }
 
 export default router

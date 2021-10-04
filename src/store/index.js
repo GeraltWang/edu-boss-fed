@@ -9,7 +9,7 @@ export default new Vuex.Store({
     user: JSON.parse(window.localStorage.getItem('user') || null)
   },
   mutations: {
-    // 存储用户数据
+    // 登录存储用户数据,登出删除用户数据
     setUser (state, payload) {
       // 由于服务器返回的是JSON字符串，所以要转换成对象后再存储
       state.user = JSON.parse(payload)

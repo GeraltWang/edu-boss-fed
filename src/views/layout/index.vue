@@ -32,7 +32,7 @@ export default {
   min-width: 980px;
 }
 .el-aside {
-  background-color: #d3dce6;
+  background-color: #F8F9FB;
 }
 
 .el-header {

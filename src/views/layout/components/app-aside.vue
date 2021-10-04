@@ -1,12 +1,16 @@
 <template>
   <div class="app-aside">
+    <router-link class="logo" to="/">
+      <img src="http://eduboss.lagou.com/edu-boss-fed/assets/img/logo.e8b9190b.png" alt="LagouEdu">
+      <h1>Edu Boss</h1>
+    </router-link>
     <el-menu
       default-active="1"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
-      background-color="#545c64"
-      text-color="#fff"
+      background-color="#f8f9fb"
+      text-color="#303113"
       active-text-color="#ffd04b"
       unique-opened
       router
@@ -70,8 +74,30 @@ export default {
 <style lang="scss" scoped>
 .app-aside {
   height: 100%;
+  .logo {
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    color: #495057;
+    line-height: 50px;
+    text-decoration: none;
+    text-align: center;
+    img {
+      margin: 10px;
+      width: 30px;
+    }
+    h1 {
+      display: inline-block;
+      margin: 0;
+      width: 95px;
+      overflow: hidden;
+      font-size: 20px;
+      white-space: nowrap;
+    }
+  }
   .el-menu {
-    height: 100%;
+    max-height: 100%;
     border-right: 0 none;
   }
 }
