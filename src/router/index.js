@@ -96,6 +96,9 @@ const routes = [
       {
         path: '/menu/:id/edit',
         name: 'menu-edit',
+        meta: {
+          breadcrumb: '编辑菜单'
+        },
         component: () => import(/* webpackChunkName: 'menu-edit' */'@/views/menu/edit')
       },
       // 分配菜单路由组件
