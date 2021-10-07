@@ -3,20 +3,20 @@
       <el-card>
         <!-- 顶部查询表单 -->
         <div slot="header" class="clearfix">
-          <el-form :inline="true" :model="form">
-              <el-form-item label="资源名称">
+          <el-form :inline="true" :model="form" ref="form">
+              <el-form-item label="资源名称" prop="name">
                   <el-input size="small" v-model="form.name" clearable></el-input>
               </el-form-item>
-              <el-form-item label="资源路径">
+              <el-form-item label="资源路径" prop="url">
                   <el-input size="small" v-model="form.url" clearable></el-input>
               </el-form-item>
-              <el-form-item label="资源分类">
+              <el-form-item label="资源分类" prop="categoryId">
                 <el-select size="small" v-model="form.categoryId" placeholder="全部" clearable>
                     <el-option v-for="item in resourceCategory" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item>
-                  <el-button type="primary" icon="el-icon-search" size="small" @click="onQuery">查询</el-button>
+              <el-form-item class="button-group">
+                  <el-button type="primary" icon="el-icon-search" size="small" @click="onQuery" :disabled="loading">查询</el-button>
                   <el-button icon="el-icon-refresh" size="small" @click="resetQuery">重置</el-button>
               </el-form-item>
           </el-form>
@@ -79,13 +79,13 @@
                 <el-button
                 @click="handleEdit(scope.$index, scope.row)"
                 type="warning"
-                size="small">
+                size="mini">
                 编辑
                 </el-button>
                 <el-button
                 @click="handleDelete(scope.$index, scope.row)"
                 type="danger"
-                size="small">
+                size="mini">
                 删除
                 </el-button>
             </template>
@@ -103,7 +103,8 @@
             :page-size="form.size"
             layout="total, sizes, prev, pager, next, jumper"
             background
-            :total="total">
+            :total="total"
+            :disabled="loading">
          </el-pagination>
       </el-row>
     </div>
@@ -124,10 +125,13 @@ export default {
         url: '',
         categoryId: ''
       },
+      // 筛选表单 select 中的选项
       resourceCategory: [],
       // 资源列表数据
       resources: [],
+      // 资源总条数
       total: 0,
+      // 资源列表加载状态
       loading: false
     }
   },
@@ -147,9 +151,7 @@ export default {
         this.resources = data.data.records
         this.total = data.data.total
       }
-      setTimeout(() => {
-        this.loading = false
-      }, 2000);
+      this.loading = false
     },
     // 加载资源分类
     async loadAllCategories () {
@@ -166,7 +168,9 @@ export default {
       this.loadResources()
     },
     // 重置查询表单
-    resetQuery () {},
+    resetQuery () {
+      this.$refs.form.resetFields()
+    },
     // 编辑资源
     handleEdit (index, row) {
       console.log(index, row);
@@ -192,14 +196,23 @@ export default {
     // 日期过滤器
     dateFormate (time) {
       const date = new Date(time)
+      const month = parseInt(date.getMonth()) + 1 < 10 ? '0' + (parseInt(date.getMonth()) + 1) : parseInt(date.getMonth()) + 1
+      const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+      const hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+      const min = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
       const second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
       return `
-        ${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}
-        ${date.getHours()}:${date.getMinutes()}:${second}`
+        ${date.getFullYear()}-${month}-${day}
+        ${hour}:${min}:${second}`
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.el-form{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>
