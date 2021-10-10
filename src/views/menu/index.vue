@@ -48,8 +48,8 @@
         header-align="center"
         align="center">
         <template slot-scope="scope">
-        <el-button @click="handleEdit(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
-        <el-button @click="handleDelete(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+        <el-button @click="handleEdit(scope.$index, scope.row)" type="warning" size="mini">编辑</el-button>
+        <el-button @click="handleDelete(scope.$index, scope.row)" type="danger" size="mini">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

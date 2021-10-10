@@ -16,3 +16,23 @@ export const getAllCategories = () => {
     url: '/boss/resource/category/getAll'
   })
 }
+
+// 获取角色拥有的资源列表
+export const getRoleResources = (roleId) => {
+  return request({
+    method: 'GET',
+    url: '/boss/resource/getRoleResources',
+    params: {
+      roleId
+    }
+  })
+}
+
+// 给角色分配资源
+export const allocateRoleResources = (data) => {
+  return request({
+    method: 'POST',
+    url: '/boss/resource/allocateRoleResources',
+    data
+  })
+}

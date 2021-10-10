@@ -103,9 +103,22 @@ const routes = [
       },
       // 分配菜单路由组件
       {
-        path: '/role/:roleId/alloc-menu',
+        path: '/role/:roleId&:name/alloc-menu',
         name: 'alloc-menu',
+        meta: {
+          breadcrumb: '分配菜单'
+        },
         component: () => import(/* webpackChunkName: 'alloc-menu' */'@/views/role/alloc-menu'),
+        props: true
+      },
+      // 分配资源路由组件
+      {
+        path: '/role/:roleId&:name/alloc-resource',
+        name: 'alloc-resource',
+        meta: {
+          breadcrumb: '分配资源'
+        },
+        component: () => import(/* webpackChunkName: 'alloc-resource' */'@/views/role/alloc-resource'),
         props: true
       },
       // 添加课程组件

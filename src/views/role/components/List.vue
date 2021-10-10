@@ -12,7 +12,9 @@
                     </el-form-item>
                 </el-form>
             </div>
-            <el-button size="small" @click="onAdd">添加角色</el-button>
+            <div class="add-button-box">
+              <el-button size="small" @click="onAdd">添加角色</el-button>
+            </div>
             <el-table
             :data="role"
             v-loading="loading"
@@ -61,8 +63,8 @@
                 width="160">
                 <template slot-scope="scope">
                     <div>
-                        <el-button type="text" size="mini">分配菜单</el-button>
-                        <el-button type="text" size="mini">分配资源</el-button>
+                        <el-button type="text" size="mini" @click="allocMenu(scope.row)">分配菜单</el-button>
+                        <el-button type="text" size="mini" @click="allocResource(scope.row)">分配资源</el-button>
                     </div>
                     <div>
                        <el-button
@@ -82,13 +84,27 @@
                 </el-table-column>
           </el-table>
         </el-card>
+        <!-- 分页组件 -->
+        <el-row type="flex" class="row-bg" justify="center">
+          <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="form.current"
+              :page-sizes="[10, 20, 30, 40]"
+              :page-size="form.size"
+              layout="total, sizes, prev, pager, next, jumper"
+              background
+              :total="total"
+              :disabled="loading">
+          </el-pagination>
+        </el-row>
         <!-- 新增角色弹出 dialog -->
         <el-dialog :title="isEdit ? '编辑角色' : '添加角色'" :visible.sync="dialogFormVisible" lock-scroll width="40%">
             <create-or-edit
                 :is-edit="isEdit"
-                :edit-role-id="editRoleId"
-                @addSuccess="receiveSuccess"
-                @addCancel="receiveCancel"
+                :edit-role="editRole"
+                @success="receiveSuccess"
+                @cancel="receiveCancel"
             ></create-or-edit>
         </el-dialog>
     </div>
@@ -106,7 +122,11 @@ export default {
     return {
       // 查询表单
       form: {
-        name: ''
+        name: '',
+        // 当前页
+        current: 1,
+        // 每页显示条数
+        size: 10
       },
       // 角色列表
       role: [],
@@ -118,29 +138,33 @@ export default {
       dialogFormVisible: false,
       // 控制对话框的功能状态 新增/编辑
       isEdit: false,
-      // 存储正在编辑角色的id
-      editRoleId: ''
+      // 存储正在编辑的角色
+      editRole: {},
+      // 角色总条数
+      total: 0
     }
   },
   created () {
     this.loadAllRoles()
   },
   methods: {
-    async loadAllRoles (form = {}) {
+    async loadAllRoles () {
       this.loading = true
-      const { data } = await getRolePages(form)
+      const { data } = await getRolePages(this.form)
       if (data.code === '000000') {
         this.role = data.data.records
-        this.loading = false
+        this.total = data.data.total
       }
+      this.loading = false
     },
     // 顶部筛选表单查询
     onQuery () {
-      this.loadAllRoles(this.form)
+      this.loadAllRoles()
     },
     // 重置查询表单
     resetQuery () {
       this.$refs.form.resetFields()
+      this.loadAllRoles()
     },
     // 添加角色，显示dialog
     onAdd () {
@@ -163,8 +187,8 @@ export default {
     handleEdit (index, row) {
       this.isEdit = true
       this.dialogFormVisible = true
-      this.editRoleId = row.id
-      console.log(row.id);
+      const { name, code, description, id } = row
+      this.editRole = { name, code, description, id }
     },
     // 删除角色
     async handleDelete (index, row) {
@@ -182,6 +206,26 @@ export default {
           }
         })
       console.log(index, row);
+    },
+    // 分配菜单
+    allocMenu (row) {
+      this.$router.push({ name: 'alloc-menu', params: { roleId: row.id, name: row.name } })
+    },
+    // 分配资源
+    allocResource (row) {
+      this.$router.push({ name: 'alloc-resource', params: { roleId: row.id, name: row.name } })
+    },
+    // 每页显示条数变化时触发
+    handleSizeChange (val) {
+      this.form.size = val
+      // 显示条数变化，页码归1
+      this.form.current = 1
+      this.loadAllRoles()
+    },
+    // 当前页改变时触发
+    handleCurrentChange (val) {
+      this.form.current = val
+      this.loadAllRoles()
     }
   },
   filters: {
@@ -201,6 +245,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.add-button-box{
+  height: 50px;
+}
 .create-or-edit{
     display: flex;
     align-items: center;
