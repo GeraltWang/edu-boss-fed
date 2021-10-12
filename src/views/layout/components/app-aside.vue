@@ -1,6 +1,6 @@
 <template>
   <div class="app-aside">
-    <router-link class="logo" to="/">
+    <router-link class="logo" to="/course">
       <img src="http://eduboss.lagou.com/edu-boss-fed/assets/img/logo.e8b9190b.png" alt="LagouEdu">
       <h1>Edu Boss</h1>
     </router-link>
@@ -11,7 +11,7 @@
       @close="handleClose"
       background-color="#f8f9fb"
       text-color="#303113"
-      active-text-color="#ffd04b"
+      active-text-color="#fcba05"
       unique-opened
       router
     >

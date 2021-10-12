@@ -41,3 +41,31 @@ export const queryById = (id) => {
     url: `/boss/role/${id}`
   })
 }
+
+// 列出所有角色，并且标记当前用户ID是否拥有该角色
+export const getRolesWithUserPermission = (id) => {
+  return request({
+    method: 'GET',
+    url: '/boss/role/getRolesWithUserPermission',
+    params: {
+      id
+    }
+  })
+}
+
+// 给用户分配角色
+export const allocateUserRoles = (data) => {
+  return request({
+    method: 'POST',
+    url: '/boss/role/allocateUserRoles',
+    data
+  })
+}
+
+// 查询用户角色
+export const getUserRole = id => {
+  return request({
+    method: 'GET',
+    url: `/boss/role/user/${id}`
+  })
+}

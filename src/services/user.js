@@ -19,3 +19,34 @@ export const getUserInfo = () => {
     // headers 已经在拦截其中统一处理了
   })
 }
+
+// 分页查询用户信息
+export const getUserPages = (data) => {
+  return request({
+    method: 'POST',
+    url: '/boss/user/getUserPages',
+    data
+  })
+}
+
+// 封禁用户
+export const forbidUser = userId => {
+  return request({
+    method: 'POST',
+    url: '/boss/user/forbidUser',
+    params: {
+      userId
+    }
+  })
+}
+
+// 启用用户
+export const enableUser = userId => {
+  return request({
+    method: 'POST',
+    url: '/boss/user/enableUser',
+    params: {
+      userId
+    }
+  })
+}
