@@ -22,6 +22,9 @@
                     <el-button :disabled="loading">重置</el-button>
                     <el-button type="primary" :disabled="loading">查询</el-button>
                 </el-form-item>
+                <el-form-item label="新增" class="btn-add">
+                  <el-button type="primary" icon="el-icon-plus" @click="$router.push({ name: 'course-create' })">新建课程</el-button>
+                </el-form-item>
             </el-form>
           </div>
           <el-table
@@ -60,34 +63,26 @@
               label="状态"
               header-align="center"
               align="center"
-              width="50">
+              width="80">
                 <template slot-scope="scope">
-                    <el-tag type="success" effect="dark" size="mini" v-if="scope.row.status === 1"></el-tag>
-                    <el-tag type="danger" effect="dark" size="mini" v-else></el-tag>
-                    <!-- <span>{{ scope.row.status }}</span> -->
+                    <el-switch
+                      v-model="scope.row.status"
+                      @change="changeCourseState(scope.row)"
+                      active-color="#13ce66"
+                      inactive-color="#ff4949"
+                      :active-value="1"
+                      :inactive-value="0"
+                      :disabled="scope.row.isStatusChanging">
+                    </el-switch>
                 </template>
               </el-table-column>
               <el-table-column
                 label="操作"
                 header-align="center"
                 align="center"
-                width="270"
+                width="200"
               >
                 <template slot-scope="scope">
-                    <el-button
-                    v-if="scope.row.status === 0"
-                    @click="handleSelectRole(scope.row)"
-                    type="success"
-                    size="mini">
-                    上架
-                    </el-button>
-                    <el-button
-                    v-else
-                    @click="handleSelectRole(scope.row)"
-                    type="danger"
-                    size="mini">
-                    下架
-                    </el-button>
                     <el-button
                     @click="handleSelectRole(scope.row)"
                     type="primary"
@@ -120,7 +115,7 @@
   </div>
 </template>
 <script>
-import { getQueryCourses } from '@/services/course'
+import { getQueryCourses, changeState } from '@/services/course'
 
 export default {
   name: 'CourseList',
@@ -145,14 +140,39 @@ export default {
     this.loadCourse()
   },
   methods: {
+    // 请求课程列表
     async loadCourse () {
       this.loading = true
       const { data } = await getQueryCourses(this.queryForm)
       if (data.code === '000000') {
+        // 添加一条数据，判断加载状态
+        data.data.records.forEach(item => {
+          item.isStatusChanging = false
+        })
         this.courses = data.data.records
         this.total = data.data.total
       }
       this.loading = false
+    },
+    // 课程上下架
+    changeCourseState (row) {
+      row.isStatusChanging = true
+      const msg = row.status === 1 ? '上架' : '下架'
+      this.$confirm(`此操作将${msg}该课程, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        const { data } = await changeState(row.id, row.status)
+        if (data.code === '000000') {
+          this.$message.success(`${row.status === 1 ? '课程上架成功' : '课程下架成功'}`)
+        }
+      }).catch(() => {
+        this.$message.danger('操作失败');
+      }).finally(() => {
+        row.isStatusChanging = false
+        this.loadCourse()
+      });
     },
     handleSizeChange (val) {
       this.queryForm.pageSize = val
@@ -169,9 +189,8 @@ export default {
 <style lang="scss" scoped>
 .el-card-header{
   height: 78px;
-}
-.el-tag{
-    width: 20px;
-    border-radius: 10px;
+  .btn-add{
+    float: right;
+  }
 }
 </style>
