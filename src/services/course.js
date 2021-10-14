@@ -20,3 +20,22 @@ export const changeState = (courseId, status) => {
     }
   })
 }
+
+// 保存或者更新课程信息
+export const saveOrUpdateCourse = data => {
+  return request({
+    method: 'POST',
+    url: '/boss/course/saveOrUpdateCourse',
+    data
+  })
+}
+
+// 上传图片接口
+export const uploadCourseImage = data => {
+  // data 为 FormData 对象
+  return request({
+    method: 'POST',
+    url: '/boss/course/upload',
+    data
+  })
+}
