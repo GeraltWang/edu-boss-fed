@@ -19,8 +19,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="操作">
-                    <el-button :disabled="loading">重置</el-button>
-                    <el-button type="primary" :disabled="loading">查询</el-button>
+                    <el-button :disabled="loading" @click="resetQuery">重置</el-button>
+                    <el-button type="primary" :disabled="loading" @click="queryCourse">查询</el-button>
                 </el-form-item>
                 <el-form-item label="新增" class="btn-add">
                   <el-button type="primary" icon="el-icon-plus" @click="$router.push({ name: 'course-create' })">新建课程</el-button>
@@ -154,6 +154,15 @@ export default {
       }
       this.loading = false
     },
+    // 根据名称，状态筛选课程
+    queryCourse () {
+      this.loadCourse()
+    },
+    // 重置筛选
+    resetQuery () {
+      this.$refs.form.resetFields()
+      this.loadCourse()
+    },
     // 课程上下架
     changeCourseState (row) {
       row.isStatusChanging = true
@@ -175,6 +184,7 @@ export default {
       });
     },
     handleSizeChange (val) {
+      this.queryForm.currentPage = 1
       this.queryForm.pageSize = val
       this.loadCourse()
     },
