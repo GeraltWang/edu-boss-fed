@@ -9,6 +9,17 @@ export const getQueryCourses = (data) => {
   })
 }
 
+// 通过课程Id获取课程信息
+export const getCourseById = courseId => {
+  return request({
+    method: 'GET',
+    url: '/boss/course/getCourseById',
+    params: {
+      courseId
+    }
+  })
+}
+
 // 课程上下架
 export const changeState = (courseId, status) => {
   return request({

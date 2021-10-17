@@ -29,6 +29,7 @@
           </div>
           <el-table
           :data="courses"
+          ref="courses"
           border
           show-header
           max-height="1000px"
@@ -84,13 +85,13 @@
               >
                 <template slot-scope="scope">
                     <el-button
-                    @click="handleSelectRole(scope.row)"
+                    @click="editCourse(scope.row)"
                     type="primary"
                     size="mini">
                     编辑
                     </el-button>
                     <el-button
-                    @click="handleSelectRole(scope.row)"
+                    @click="manageCourse(scope.row)"
                     size="mini">
                     内容管理
                     </el-button>
@@ -183,14 +184,25 @@ export default {
         this.loadCourse()
       });
     },
+    // 编辑课程
+    editCourse (row) {
+      this.$router.push({ name: 'course-edit', params: { courseId: row.id } })
+    },
+    // 管理课程内容
+    manageCourse (row) {
+      this.$router.push({ name: 'course-section', params: { courseId: row.id, courseName: row.courseName } })
+    },
+    // 切换显示条数
     handleSizeChange (val) {
       this.queryForm.currentPage = 1
       this.queryForm.pageSize = val
       this.loadCourse()
     },
+    // 翻页
     handleCurrentChange (val) {
       this.queryForm.currentPage = val
       this.loadCourse()
+      this.$refs.courses.bodyWrapper.scrollTop = 0
     }
   }
 }

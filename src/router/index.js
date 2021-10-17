@@ -103,7 +103,7 @@ const routes = [
       },
       // 分配菜单路由组件
       {
-        path: '/role/:roleId&:name/alloc-menu',
+        path: '/role/:roleId/:name/alloc-menu',
         name: 'alloc-menu',
         meta: {
           breadcrumb: '分配菜单'
@@ -113,7 +113,7 @@ const routes = [
       },
       // 分配资源路由组件
       {
-        path: '/role/:roleId&:name/alloc-resource',
+        path: '/role/:roleId/:name/alloc-resource',
         name: 'alloc-resource',
         meta: {
           breadcrumb: '分配资源'
@@ -125,19 +125,28 @@ const routes = [
       {
         path: '/course/create',
         name: 'course-create',
+        meta: {
+          breadcrumb: '添加课程'
+        },
         component: () => import(/* webpackChunkName: 'course-create' */'@/views/course/create')
       },
       // 编辑课程组件
       {
         path: '/course/:courseId/edit',
         name: 'course-edit',
+        meta: {
+          breadcrumb: '编辑课程'
+        },
         component: () => import(/* webpackChunkName: 'course-edit' */'@/views/course/edit'),
         props: true
       },
       // 课程内容组件
       {
-        path: '/course/:courseId/section',
+        path: '/course/:courseId/:courseName/section',
         name: 'course-section',
+        meta: {
+          breadcrumb: '内容管理'
+        },
         component: () => import(/* webpackChunkName: 'course-section' */'@/views/course/section'),
         props: true
       },
