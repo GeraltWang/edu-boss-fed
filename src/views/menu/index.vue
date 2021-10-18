@@ -8,7 +8,7 @@
       <el-table
       :data="tableData"
       border
-      max-height="570"
+      max-height="800"
       style="width: 100%">
       <el-table-column
         fixed

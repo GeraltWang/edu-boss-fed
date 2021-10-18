@@ -27,8 +27,9 @@
             :data="resources"
             v-loading="loading"
             border
-            style="width: 100%"
-            max-height="570">
+            show-header
+            max-height="800"
+            style="width: 100%">
             <el-table-column
             type="index"
             header-align="center"

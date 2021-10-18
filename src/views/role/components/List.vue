@@ -19,8 +19,7 @@
             :data="role"
             v-loading="loading"
             border
-            style="width: 100%"
-            max-height="570">
+            style="width: 100%">
                 <el-table-column
                 type="index"
                 header-align="center"

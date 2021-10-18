@@ -32,8 +32,8 @@
             :data="userList"
             v-loading="loading"
             border
-            style="width: 100%"
-            max-height="500">
+            max-height="800"
+            style="width: 100%">
               <el-table-column
             type="index"
             header-align="center"
@@ -315,9 +315,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.el-card-header{
-  height: 78px;
+.el-card{
+  .el-card-header{
+    height: 78px;
+  }
 }
+
 .dialog-info{
   display: inline-block;
   margin: 0px 20px 20px 0px

@@ -32,7 +32,7 @@
           ref="courses"
           border
           show-header
-          max-height="1000px"
+          max-height="800"
           v-loading="loading">
               <el-table-column
               prop="id"
