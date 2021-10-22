@@ -1,6 +1,6 @@
 <template>
   <div class="course-section">
-      <el-page-header @back="$router.go(-1)">
+      <el-page-header @back="$router.push({ name: 'course' })">
           <span slot="content" class="header-content">
               <span>{{courseName}}</span>
               <el-button type="primary" @click="addSection">添加阶段</el-button>
@@ -8,9 +8,12 @@
       </el-page-header>
       <el-card>
         <el-tree
+        v-loading="loading"
         :data="courseSection"
         :props="defaultProps"
-        draggable>
+        draggable
+        :allow-drop="allowDrop"
+        @node-drop="nodeDrop">
             <div class="inner" slot-scope="{ node, data}">
                 <!-- 自定义插槽内容设置 -->
                 <span>{{ node.label }}</span>
@@ -22,7 +25,9 @@
                 </span>
                 <span v-else>
                     <el-button size="small" icon="el-icon-edit" @click="editLesson(data, node)">编辑</el-button>
-                    <el-button size="small" icon="el-icon-upload">上传视频</el-button>
+                    <el-button size="small" icon="el-icon-upload" @click="$router.push({
+                      name: 'course-video', params: { courseId, courseName, lessonId: data.id, theme: data.theme }
+                    })">上传视频</el-button>
                     <el-button size="small" @click.stop="changeSectionStatus(data)">{{data.status | status}}</el-button>
                 </span>
             </div>
@@ -135,7 +140,9 @@ export default {
       },
       // 用于判断要更改状态的是章节还是课时
       isSection: true,
-      lessonDialogVisible: false
+      lessonDialogVisible: false,
+      // 更新视图时loading
+      loading: false
     }
   },
   created () {
@@ -149,6 +156,39 @@ export default {
         this.courseSection = data.data
       }
       console.log(data);
+    },
+    // 节点拖拽处理
+    allowDrop (draggingNode, dropNode, type) {
+      // 只能同级移动
+      return type !== 'inner' && draggingNode.data.sectionId === dropNode.data.sectionId
+      // 课时不能移动到其他章节中
+    },
+    // 节点拖拽数据更新, 使用Promise.all([]) 进行批量的异步请求处理,默认传入数组
+    async nodeDrop (draggingNode, dropNode, type, event) {
+      // 由于有很多章节和课时，所以需要给每个章节和课时更新最新的排序
+      this.loading = true
+      try {
+        await Promise.all(dropNode.parent.childNodes.map((item, index) => {
+        // 判断是章节还是课时，发送对应请求
+          if (draggingNode.data.sectionId) {
+          // 课时
+            return saveOrUpdateLesson({
+              id: item.data.id,
+              orderNum: index
+            })
+          } else {
+            // 章节
+            return saveOrUpdateSection({
+              id: item.data.id,
+              orderNum: index
+            })
+          }
+        }))
+        this.$message.success('节点数据更新成功')
+      } catch (error) {
+        this.$message.error('节点数据更新失败', error)
+      }
+      this.loading = false
     },
     // 添加章节
     addSection () {

@@ -25,6 +25,7 @@ const routes = [
       {
         path: '',
         name: 'home',
+        redirect: '/course',
         component: () => import(/* webpackChunkName: 'home' */'@/views/home/index')
       },
       {
@@ -152,8 +153,11 @@ const routes = [
       },
       // 上传课时视频
       {
-        path: '/course/:courseId/video',
+        path: '/course/:courseId/:lessonId/video',
         name: 'course-video',
+        meta: {
+          breadcrumb: '视频上传'
+        },
         component: () => import(/* webpackChunkName: 'course-video' */'@/views/course/video'),
         props: true
       }

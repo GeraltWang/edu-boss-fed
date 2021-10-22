@@ -1,11 +1,14 @@
 <template>
   <div class="app-header">
-    <!-- 左侧面包屑导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: item.path }" v-for="item in breadcrumbList" :key="item.name">
-        {{item.meta.breadcrumb}}
-      </el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="app-header-left">
+      <el-button type="text" @click="expand"><i :class="fold"></i></el-button>
+      <!-- 左侧面包屑导航 -->
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: item.path }" v-for="item in breadcrumbList" :key="item.name">
+          {{item.meta.breadcrumb}}
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <!-- 右侧用户信息 -->
     <el-dropdown>
       <span class="el-dropdown-link">
@@ -35,7 +38,9 @@ export default {
   data () {
     return {
       // 用户信息
-      userInfo: {}
+      userInfo: {},
+      isFold: false,
+      fold: 'el-icon-s-fold'
     };
   },
   methods: {
@@ -65,6 +70,18 @@ export default {
           message: '已取消操作'
         });
       });
+    },
+    // 折叠菜单栏
+    expand () {
+      if (!this.isFold) {
+        this.isFold = !this.isFold
+        this.fold = 'el-icon-s-unfold'
+        this.$emit('expand', this.isFold)
+      } else {
+        this.isFold = !this.isFold
+        this.fold = 'el-icon-s-fold'
+        this.$emit('expand', this.isFold)
+      }
     }
   },
   computed: {
@@ -80,5 +97,14 @@ export default {
   height: 100%;
   justify-content: space-between;
   align-items: center;
+  .app-header-left{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    .el-button{
+      margin-right: 20px;
+      font-size: 20px;
+    }
+  }
 }
 </style>

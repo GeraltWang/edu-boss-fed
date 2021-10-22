@@ -93,7 +93,6 @@ export default {
   },
   created () {
     if (this.isEdit) {
-      console.log(this.lessonId);
       this.loadLessonForm()
     } else {
       this.lessonForm.courseName = this.courseName
@@ -103,6 +102,7 @@ export default {
     }
   },
   methods: {
+    // 加载课时数据，并显示在表单中
     async loadLessonForm () {
       const { data } = await getByLessonId(this.lessonId)
       const data2 = await getBySectionId(this.sectionId)

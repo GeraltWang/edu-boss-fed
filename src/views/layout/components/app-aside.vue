@@ -2,7 +2,7 @@
   <div class="app-aside">
     <router-link class="logo" to="/course">
       <img src="http://eduboss.lagou.com/edu-boss-fed/assets/img/logo.e8b9190b.png" alt="LagouEdu">
-      <h1>Edu Boss</h1>
+      <h1 :class="{'fold':value}">Edu Boss</h1>
     </router-link>
     <el-menu
       default-active="1"
@@ -13,6 +13,7 @@
       text-color="#303113"
       active-text-color="#fcba05"
       unique-opened
+      :collapse="value"
       router
     >
       <el-submenu index="1">
@@ -61,6 +62,12 @@
 <script>
 export default {
   name: 'AppAside',
+  props: {
+    value: {
+      type: [String, Boolean],
+      default: false
+    }
+  },
   methods: {
     handleOpen (key, keyPath) {
       console.log(key, keyPath);
@@ -72,6 +79,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
 .app-aside {
   height: 100%;
   .logo {
@@ -94,6 +105,9 @@ export default {
       overflow: hidden;
       font-size: 20px;
       white-space: nowrap;
+    }
+    .fold{
+      width: 0;
     }
   }
   .el-menu {

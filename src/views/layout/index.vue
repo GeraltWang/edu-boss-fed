@@ -1,12 +1,12 @@
 <template>
   <div>
     <el-container>
-      <el-aside width="200px">
-        <app-aside></app-aside>
+      <el-aside width="200">
+        <app-aside :value="value"></app-aside>
       </el-aside>
       <el-container>
         <el-header>
-          <app-header></app-header>
+          <app-header @expand="value=$event"></app-header>
         </el-header>
         <el-main>
           <router-view></router-view>
@@ -20,6 +20,11 @@ import AppAside from './components/app-aside.vue';
 import AppHeader from './components/app-header.vue';
 export default {
   name: 'Layout',
+  data () {
+    return {
+      value: null
+    }
+  },
   components: {
     AppAside,
     AppHeader
