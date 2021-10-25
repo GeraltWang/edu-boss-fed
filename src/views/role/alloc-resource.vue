@@ -83,8 +83,10 @@ export default {
         }
         // 选中，但没有子节点，存储id即可
         this.checkedRes = [...this.checkedRes, list.id]
+        // this.checkedRes.push(list.id)
       });
       console.log(this.checkedRes, 1);
+      // this.$refs.resources.setCheckedKeys(this.checkedRes)
     },
     // 保存资源
     async onSave () {

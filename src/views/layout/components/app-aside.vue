@@ -5,10 +5,8 @@
       <h1 :class="{'fold':value}">Edu Boss</h1>
     </router-link>
     <el-menu
-      default-active="1"
+      :default-active="$route.fullPath"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
       background-color="#f8f9fb"
       text-color="#303113"
       active-text-color="#fcba05"
@@ -16,7 +14,7 @@
       :collapse="value"
       router
     >
-      <el-submenu index="1">
+      <el-submenu index="/">
         <template slot="title">
           <i class="el-icon-lock"></i>
           <span>权限管理</span>
@@ -66,14 +64,6 @@ export default {
     value: {
       type: [String, Boolean],
       default: false
-    }
-  },
-  methods: {
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose (key, keyPath) {
-      console.log(key, keyPath);
     }
   }
 };

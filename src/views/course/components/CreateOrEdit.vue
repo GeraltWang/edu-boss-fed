@@ -75,7 +75,7 @@
           <course-image
           label="解锁封面"
           :limit="3"
-          v-model="course.courseImageUrl">
+          v-model="course.courseImgUrl">
           </course-image>
         </div>
         <!-- 销售信息 -->
